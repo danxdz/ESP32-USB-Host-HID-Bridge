@@ -26,7 +26,7 @@ void device_info_cb(usb_device_info_t *dev_info);
 void hid_report_descriptor_cb(usb_transfer_t *transfer);
 void hid_report_cb(usb_transfer_t *transfer);
 UsbHostHidBridge hidBridge;
-// int32_t usb_input_ch[] = { 0,0,0,0, 0,0,0,0 };
+int32_t usb_input_ch[] = { 0,0,0,0, 0,0,0,0 };
 
 void setup(void)
 {
@@ -35,7 +35,7 @@ void setup(void)
 
     hidBridge.setOnConfigDescriptorReceived( config_desc_cb );
     hidBridge.setOnDeviceInfoReceived( device_info_cb );
-    hidBridge.setOnHidReportDescriptorReceived( hid_report_descriptor_cb );
+   // hidBridge.setOnHidReportDescriptorReceived( hid_report_descriptor_cb );
     hidBridge.setOnReportReceived( hid_report_cb );
     hidBridge.begin();
 }
