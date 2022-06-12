@@ -152,10 +152,13 @@ static void action_claim_interface(class_driver_t *driver_obj, UsbHostHidBridge 
     {
         const usb_intf_desc_t *intf = usb_parse_interface_descriptor(config_desc, n, 0, &offset);
         ESP_LOGI(TAG_CLASS, "Parsed intf->bInterfaceNumber: 0x%02x \n", intf->bInterfaceNumber);
-        
+        Serial.printf("Parsed intf->bInterfaceNumber: 0x%02x \n", intf->bInterfaceNumber);
+        Serial.printf("Detected HID intf->bInterfaceClass: 0x%02x \n", intf->bInterfaceClass);
+
         if (intf->bInterfaceClass == 0x03) // HID - https://www.usb.org/defined-class-codes
         {
             ESP_LOGI(TAG_CLASS, "Detected HID intf->bInterfaceClass: 0x%02x \n", intf->bInterfaceClass);
+            Serial.printf("Detected endpoints: 0x%02x \n", intf->bNumEndpoints);
 
             const usb_ep_desc_t *ep_in = NULL;
             const usb_ep_desc_t *ep_out = NULL;
@@ -165,6 +168,9 @@ static void action_claim_interface(class_driver_t *driver_obj, UsbHostHidBridge 
                 ep = usb_parse_endpoint_descriptor_by_index(intf, i, config_desc->wTotalLength, &_offset);
                 ESP_LOGI(TAG_CLASS, "\t > Detected EP num: %d/%d, len: %d, ", i + 1, intf->bNumEndpoints, config_desc->wTotalLength);
                 ESP_LOGI(TAG_CLASS, "\t   address: 0x%02x, mps: %d, dir: %s", ep->bEndpointAddress, ep->wMaxPacketSize, (ep->bEndpointAddress & 0x80) ? "IN" : "OUT");
+                Serial.printf("\t > Detected EP num: %d/%d, len: %d, ", i + 1, intf->bNumEndpoints, config_desc->wTotalLength);
+                Serial.printf("\t   address: 0x%02x, mps: %d, dir: %s", ep->bEndpointAddress, ep->wMaxPacketSize, (ep->bEndpointAddress & 0x80) ? "IN" : "OUT");
+                
                 if (ep) {
                     if (ep->bmAttributes != USB_TRANSFER_TYPE_INTR) {
                         // only support INTERRUPT > IN Report in action_transfer() for now
